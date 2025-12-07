@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medical Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<style>
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body { font-family: 'Poppins', sans-serif; background: #f5f7fa; }
+    header { background: linear-gradient(90deg,#2c3e50,#1abc9c); color: #fff; padding: 25px; text-align:center; box-shadow:0 5px 10px rgba(0,0,0,0.1);}
+    nav { background-color: #34495e; display:flex; justify-content:center; flex-wrap:wrap; padding:10px 0; }
+    nav a { color:white; text-decoration:none; padding:12px 20px; margin:5px; border-radius:6px; transition:0.3s; }
+    nav a:hover { background-color:#1abc9c; color:white; }
+    .container { max-width:1200px; margin:auto; padding:20px; }
+    .counters { display:flex; justify-content: space-around; margin-bottom: 30px; }
+    .counter { background:white; padding:20px; border-radius:12px; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.1); flex:1; margin:10px; }
+    .counter h2 { font-size:2em; color:#1abc9c; }
+    .section { margin:40px 0; padding:25px; background:white; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.05); }
+    .section h2 { color:#2c3e50; margin-bottom:15px; }
+    table { width:100%; border-collapse:collapse; margin-top:20px; }
+    th, td { border:1px solid #ddd; padding:10px; text-align:left; }
+    th { background-color:#2c3e50; color:white; }
+    td button { margin:0 3px; padding:5px 8px; }
+    button { background-color:#1abc9c; color:white; border:none; padding:10px 18px; border-radius:8px; cursor:pointer; margin:5px 0; font-weight:600; transition:0.3s; }
+    button:hover { background-color:#16a085; }
+    footer { text-align:center; padding:20px; background-color:#34495e; color:white; margin-top:50px; }
+    /* Modal */
+    .modal { display:none; position:fixed; z-index:999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.5);}
+    .modal-content { background:white; margin:10% auto; padding:20px; border-radius:12px; width:90%; max-width:500px; box-shadow:0 5px 15px rgba(0,0,0,0.3); }
+    .modal-content input, .modal-content select { width:100%; padding:8px; margin:8px 0; border-radius:6px; border:1px solid #ccc; }
+    .modal-content h3 { margin-bottom:15px; }
+    .close { float:right; font-size:1.5em; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Medical Management System</h1>
+    <p>Your health, our priority</p>
+</header>
+
+<nav>
+    <a href="#patients">Patients</a>
+    <a href="#appointments">Appointments</a>
+    <a href="#doctors">Doctors</a>
+    <a href="#prescriptions">Prescriptions</a>
+    <a href="#billing">Billing</a>
+    <a href="#reports">Reports</a>
+</nav>
+
+<div class="container">
+
+    <!-- Animated Counters -->
+    <div class="counters">
+        <div class="counter"><h2 id="patientsCounter">0</h2><p>Total Patients</p></div>
+        <div class="counter"><h2 id="appointmentsCounter">0</h2><p>Total Appointments</p></div>
+        <div class="counter"><h2 id="revenueCounter">৳0</h2><p>Total Revenue</p></div>
+    </div>
+
+    <!-- Patient Section -->
+    <div class="section" id="patients">
+        <h2>Patient Management</h2>
+        <button onclick="openModal('patient')">Add New Patient</button>
+        <button onclick="downloadPDF('Patients','patientsTable')">Export Patients PDF</button>
+        <table id="patientsTable">
+            <thead><tr><th>Name</th><th>Age</th><th>Contact</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Appointments Section -->
+    <div class="section" id="appointments">
+        <h2>Appointments</h2>
+        <button onclick="openModal('appointment')">Add Appointment</button>
+        <button onclick="downloadPDF('Appointments','appointmentsTable')">Export Appointments PDF</button>
+        <table id="appointmentsTable">
+            <thead><tr><th>Date</th><th>Time</th><th>Patient</th><th>Doctor</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Doctors Section -->
+    <div class="section" id="doctors">
+        <h2>Doctors</h2>
+        <button onclick="openModal('doctor')">Add Doctor</button>
+        <button onclick="downloadPDF('Doctors','doctorsTable')">Export Doctors PDF</button>
+        <table id="doctorsTable">
+            <thead><tr><th>Name</th><th>Specialty</th><th>Contact</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Prescriptions Section -->
+    <div class="section" id="prescriptions">
+        <h2>Prescriptions</h2>
+        <button onclick="openModal('prescription')">Add Prescription</button>
+        <button onclick="downloadPDF('Prescriptions','prescriptionsTable')">Export Prescriptions PDF</button>
+        <table id="prescriptionsTable">
+            <thead><tr><th>Patient</th><th>Medicine</th><th>Dosage</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Billing Section -->
+    <div class="section" id="billing">
+        <h2>Billing</h2>
+        <button onclick="openModal('billing')">Add Billing</button>
+        <button onclick="downloadPDF('Billing','billingTable')">Export Billing PDF</button>
+        <table id="billingTable">
+            <thead><tr><th>Invoice</th><th>Patient</th><th>Date</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Reports Section -->
+    <div class="section" id="reports">
+        <h2>Reports</h2>
+        <button onclick="downloadPDF('Reports','reportsTable')">Export Reports PDF</button>
+        <table id="reportsTable">
+            <thead><tr><th>Type</th><th>Date</th><th>Generated By</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+</div>
+
+<footer>
+    <p>Contact: support@medicalmanagement.com | Privacy Policy | Terms of Service</p>
+</footer>
+
+<!-- Modal -->
+<div class="modal" id="formModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle">Add Item</h3>
+        <form id="modalForm">
+        </form>
+    </div>
+</div>
+
+<script>
+let patients = [], doctors = [], appointments = [], prescriptions = [], billing = [], reports = [];
+
+function openModal(type, index=null) {
+    const modal = document.getElementById('formModal');
+    const form = document.getElementById('modalForm');
+    const title = document.getElementById('modalTitle');
+    form.innerHTML = '';
+    title.textContent = 'Add ' + type.charAt(0).toUpperCase() + type.slice(1);
+
+    if(type==='patient'){
+        form.innerHTML = `
+            <input type="text" id="name" placeholder="Name" required>
+            <input type="number" id="age" placeholder="Age" required>
+            <input type="text" id="contact" placeholder="Contact" required>
+            <button type="submit">Save</button>`;
+        form.onsubmit = e => { e.preventDefault(); savePatient(index); };
+    }
+    if(type==='doctor'){
+        form.innerHTML = `
+            <input type="text" id="name" placeholder="Name" required>
+            <input type="text" id="specialty" placeholder="Specialty" required>
+            <input type="text" id="contact" placeholder="Contact" required>
+            <button type="submit">Save</button>`;
+        form.onsubmit = e => { e.preventDefault(); saveDoctor(index); };
+    }
+    if(type==='appointment'){
+        form.innerHTML = `
+            <input type="date" id="date" required>
+            <input type="time" id="time" required>
+            <select id="patient">${patients.map(p=>`<option>${p.name}</option>`).join('')}</select>
+            <select id="doctor">${doctors.map(d=>`<option>${d.name}</option>`).join('')}</select>
+            <button type="submit">Save</button>`;
+        form.onsubmit = e => { e.preventDefault(); saveAppointment(index); };
+    }
+    if(type==='prescription'){
+        form.innerHTML = `
+            <select id="patient">${patients.map(p=>`<option>${p.name}</option>`).join('')}</select>
+            <input type="text" id="medicine" placeholder="Medicine" required>
+            <input type="text" id="dosage" placeholder="Dosage" required>
+            <button type="submit">Save</button>`;
+        form.onsubmit = e => { e.preventDefault(); savePrescription(index); };
+    }
+    if(type==='billing'){
+        form.innerHTML = `
+            <input type="text" id="invoice" placeholder="Invoice #" required>
+            <select id="patient">${patients.map(p=>`<option>${p.name}</option>`).join('')}</select>
+            <input type="date" id="date" required>
+            <input type="number" id="amount" placeholder="Amount" required>
+            <select id="status"><option>Paid</option><option>Pending</option></select>
+            <button type="submit">Save</button>`;
+        form.onsubmit = e => { e.preventDefault(); saveBilling(index); };
+    }
+
+    modal.style.display = 'block';
+}
+
+function closeModal() { document.getElementById('formModal').style.display='none'; }
+
+function savePatient(i=null){
+    const name = document.getElementById('name').value;
+    const age = document.getElementById('age').value;
+    const contact = document.getElementById('contact').value;
+    if(i!==null){ patients[i]={name,age,contact}; } else { patients.push({name,age,contact}); }
+    closeModal(); renderPatients(); animateCounters();
+}
+
+function saveDoctor(i=null){
+    const name = document.getElementById('name').value;
+    const specialty = document.getElementById('specialty').value;
+    const contact = document.getElementById('contact').value;
+    if(i!==null){ doctors[i]={name,specialty,contact}; } else { doctors.push({name,specialty,contact}); }
+    closeModal(); renderDoctors(); 
+}
+
+function saveAppointment(i=null){
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+    const patient = document.getElementById('patient').value;
+    const doctor = document.getElementById('doctor').value;
+    if(i!==null){ appointments[i]={date,time,patient,doctor}; } else { appointments.push({date,time,patient,doctor}); }
+    closeModal(); renderAppointments(); animateCounters();
+}
+
+function savePrescription(i=null){
+    const patient = document.getElementById('patient').value;
+    const medicine = document.getElementById('medicine').value;
+    const dosage = document.getElementById('dosage').value;
+    if(i!==null){ prescriptions[i]={patient,medicine,dosage}; } else { prescriptions.push({patient,medicine,dosage}); }
+    closeModal(); renderPrescriptions();
+}
+
+function saveBilling(i=null){
+    const invoice=document.getElementById('invoice').value;
+    const patient=document.getElementById('patient').value;
+    const date=document.getElementById('date').value;
+    const amount=parseFloat(document.getElementById('amount').value);
+    const status=document.getElementById('status').value;
+    if(i!==null){ billing[i]={invoice,patient,date,amount,status}; } else { billing.push({invoice,patient,date,amount,status}); }
+    closeModal(); renderBilling(); animateCounters();
+}
+
+function renderPatients(){
+    const tbody=document.getElementById('patientsTable').querySelector('tbody');
+    tbody.innerHTML='';
+    patients.forEach((p,i)=>{ 
+        tbody.innerHTML+=`<tr><td>${p.name}</td><td>${p.age}</td><td>${p.contact}</td>
+        <td><button onclick="editPatient(${i})">Edit</button><button onclick="deletePatient(${i})">Delete</button></td></tr>`;
+    });
+}
+
+function renderDoctors(){
+    const tbody=document.getElementById('doctorsTable').querySelector('tbody');
+    tbody.innerHTML='';
+    doctors.forEach((d,i)=>{ 
+        tbody.innerHTML+=`<tr><td>${d.name}</td><td>${d.specialty}</td><td>${d.contact}</td>
+        <td><button onclick="editDoctor(${i})">Edit</button><button onclick="deleteDoctor(${i})">Delete</button></td></tr>`;
+    });
+}
+
+function renderAppointments(){
+    const tbody=document.getElementById('appointmentsTable').querySelector('tbody');
+    tbody.innerHTML='';
+    appointments.forEach((a,i)=>{
+        tbody.innerHTML+=`<tr><td>${a.date}</td><td>${a.time}</td><td>${a.patient}</td><td>${a.doctor}</td>
+        <td><button onclick="editAppointment(${i})">Edit</button><button onclick="deleteAppointment(${i})">Delete</button></td></tr>`;
+    });
+}
+
+function renderPrescriptions(){
+    const tbody=document.getElementById('prescriptionsTable').querySelector('tbody');
+    tbody.innerHTML='';
+    prescriptions.forEach((p,i)=>{
+        tbody.innerHTML+=`<tr><td>${p.patient}</td><td>${p.medicine}</td><td>${p.dosage}</td>
+        <td><button onclick="editPrescription(${i})">Edit</button><button onclick="deletePrescription(${i})">Delete</button></td></tr>`;
+    });
+}
+
+function renderBilling(){
+    const tbody=document.getElementById('billingTable').querySelector('tbody');
+    tbody.innerHTML='';
+    billing.forEach((b,i)=>{
+        tbody.innerHTML+=`<tr><td>${b.invoice}</td><td>${b.patient}</td><td>${b.date}</td><td>৳${b.amount}</td><td>${b.status}</td>
+        <td><button onclick="editBilling(${i})">Edit</button><button onclick="deleteBilling(${i})">Delete</button></td></tr>`;
+    });
+}
+
+function editPatient(i){ openModal('patient',i); document.getElementById('name').value=patients[i].name; document.getElementById('age').value=patients[i].age; document.getElementById('contact').value=patients[i].contact;}
+function editDoctor(i){ openModal('doctor',i); document.getElementById('name').value=doctors[i].name; document.getElementById('specialty').value=doctors[i].specialty; document.getElementById('contact').value=doctors[i].contact;}
+function editAppointment(i){ openModal('appointment',i); document.getElementById('date').value=appointments[i].date; document.getElementById('time').value=appointments[i].time; document.getElementById('patient').value=appointments[i].patient; document.getElementById('doctor').value=appointments[i].doctor;}
+function editPrescription(i){ openModal('prescription',i); document.getElementById('patient').value=prescriptions[i].patient; document.getElementById('medicine').value=prescriptions[i].medicine; document.getElementById('dosage').value=prescriptions[i].dosage;}
+function editBilling(i){ openModal('billing',i); document.getElementById('invoice').value=billing[i].invoice; document.getElementById('patient').value=billing[i].patient; document.getElementById('date').value=billing[i].date; document.getElementById('amount').value=billing[i].amount; document.getElementById('status').value=billing[i].status;}
+
+function deletePatient(i){ if(confirm('Delete this patient?')){ patients.splice(i,1); renderPatients(); animateCounters(); }}
+function deleteDoctor(i){ if(confirm('Delete this doctor?')){ doctors.splice(i,1); renderDoctors(); }}
+function deleteAppointment(i){ if(confirm('Delete this appointment?')){ appointments.splice(i,1); renderAppointments(); animateCounters(); }}
+function deletePrescription(i){ if(confirm('Delete this prescription?')){ prescriptions.splice(i,1); renderPrescriptions(); }}
+function deleteBilling(i){ if(confirm('Delete this billing?')){ billing.splice(i,1); renderBilling(); animateCounters(); }}
+
+function animateCounters(){
+    document.getElementById('patientsCounter').innerText = patients.length;
+    document.getElementById('appointmentsCounter').innerText = appointments.length;
+    let totalRevenue = billing.reduce((a,b)=>a+b.amount,0);
+    document.getElementById('revenueCounter').innerText = '৳'+totalRevenue;
+}
+
+// PDF Export
+function downloadPDF(title, tableId){
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text(title,20,20);
+    const table=document.getElementById(tableId);
+    let rows=[];
+    for(let i=0;i<table.rows.length;i++){
+        let row=[];
+        for(let j=0;j<table.rows[i].cells.length;j++){
+            row.push(table.rows[i].cells[j].innerText);
+        }
+        rows.push(row);
+    }
+    doc.autoTable({head:[rows[0]], body:rows.slice(1), startY:30});
+    doc.save(title+'.pdf');
+}
+</script>
+
+</body>
+</html>

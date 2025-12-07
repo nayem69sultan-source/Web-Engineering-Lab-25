@@ -1,0 +1,12 @@
+# Ignore Windows system files
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+AppData/
+*.log
+ECHO is on.
+# Ignore VSCode, node_modules, temp files
+.vscode/
+node_modules/
+*.env
+*.tmp
