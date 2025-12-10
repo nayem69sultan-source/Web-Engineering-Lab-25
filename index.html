@@ -26,32 +26,30 @@
   --glass: rgba(255,255,255,0.03);
 }
 *{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
-  background:var(--bg);color:var(--text);
-  transition: background .35s, color .35s;
-}
+html,body{height:100%;margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);transition: background .35s, color .35s;}
 
-#tsparticles{position:fixed;inset:0;z-index:-1;pointer-events:none}
+#tsparticles-hero{position:absolute;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;}
+
 .wrap{max-width:1100px;margin:0 auto;padding:24px}
-header{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+header{display:flex;align-items:center;justify-content:space-between;padding:16px 0;position:relative;z-index:10;flex-wrap:wrap}
 .brand{font-weight:700;font-size:20px}
 .brand span{color:var(--accent)}
-nav{display:flex;gap:12px;align-items:center}
+nav{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 nav a{color:var(--text);text-decoration:none;font-weight:600;padding:8px;border-radius:8px;transition:0.25s}
 nav a:hover{color:var(--accent)}
-.controls{display:flex;gap:10px;align-items:center}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .btn{background:var(--accent);color:white;padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:600;transition:0.3s}
 .btn:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(32,97,255,0.3);}
 .btn.ghost{background:transparent;border:1px solid rgba(15,98,255,0.12);color:var(--accent)}
 .icon-btn{background:transparent;border:0;cursor:pointer;font-size:18px;padding:8px;border-radius:8px}
 
-.hero{display:grid;grid-template-columns:1fr 380px;gap:40px;align-items:center;padding:36px 0}
+.hero{display:grid;grid-template-columns:1fr 380px;gap:40px;align-items:center;padding:36px 0;position:relative;z-index:1;min-height:400px}
 .card-glass{background:var(--glass);backdrop-filter:blur(8px);padding:20px;border-radius:14px;box-shadow:0 8px 30px rgba(2,6,23,0.08);transition:0.3s}
 .card-glass:hover{transform:translateY(-3px);}
-.hero h1{font-size:34px;margin-bottom:8px}
-.lead{color:var(--muted);line-height:1.5;margin-bottom:12px}
+.hero h1{font-size:34px;margin-bottom:8px;line-height:1.2;}
+.hero .typing{color:var(--accent);font-weight:600;font-size:18px;min-height:24px;margin-bottom:12px}
+.lead{color:var(--muted);line-height:1.5;margin-bottom:12px;font-size:16px}
 .hero .meta{display:flex;flex-direction:column;gap:6px;margin-top:12px;color:var(--muted);font-size:14px}
 .profile-photo{width:100%;border-radius:12px;overflow:hidden;display:block;transition:0.3s}
 .profile-photo:hover{transform:scale(1.03);}
@@ -65,7 +63,7 @@ h2{font-size:26px;margin-bottom:14px;text-align:center}
 .muted{color:var(--muted)}
 
 .cv-wrap{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
-.cv-preview{width:100%;height:680px;border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.06)}
+.cv-preview{width:100%;height:680px;border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.06);transition:0.5s}
 .cv-actions{display:flex;flex-direction:column;gap:10px;min-width:260px}
 
 .contact-grid{display:grid;grid-template-columns:1fr 420px;gap:18px}
@@ -74,10 +72,32 @@ h2{font-size:26px;margin-bottom:14px;text-align:center}
 .contact-form label{display:block;margin-top:10px;color:var(--muted);font-size:14px}
 
 footer{text-align:center;padding:30px 0;color:var(--muted)}
+
+@media (max-width:1200px){
+  .hero{grid-template-columns:1fr 1fr;gap:30px}
+  .hero h1{font-size:30px;}
+  .hero .typing{font-size:17px;}
+  .lead{font-size:15px;}
+}
 @media (max-width:980px){
-  .hero{grid-template-columns:1fr;gap:22px}
-  .contact-grid{grid-template-columns:1fr}
+  .hero{grid-template-columns:1fr;gap:22px;padding:30px 0;}
   nav{display:none}
+}
+@media (max-width:768px){
+  .hero{grid-template-columns:1fr;gap:18px;padding:24px 0;}
+  .hero h1{font-size:26px;}
+  .hero .typing{font-size:16px;}
+  .lead{font-size:14px;}
+  .cv-preview{height:500px;}
+}
+@media (max-width:480px){
+  .hero{grid-template-columns:1fr;gap:14px;padding:20px 0;}
+  .hero h1{font-size:22px;}
+  .hero .typing{font-size:14px;}
+  .lead{font-size:13px;}
+  .cv-preview{height:400px;}
+  .card-glass{padding:16px;}
+  .controls{flex-direction:column;gap:8px;}
 }
 </style>
 </head>
@@ -94,34 +114,36 @@ footer{text-align:center;padding:30px 0;color:var(--muted)}
     <a href="#contact">Contact</a>
   </nav>
   <div class="controls">
-    <a href="S.%20M.%20Al%20Nayem%20Sultan%20.pdf" download class="btn">Download CV (PDF)</a>
-
+    <a href="S.%20M.%20Al%20Nayem%20Sultan%20.pdf" download class="btn">Download CV</a>
     <button id="previewToggle" class="btn ghost">Toggle Preview</button>
     <button id="darkToggle" class="icon-btn" title="Toggle dark mode">🌙</button>
   </div>
 </header>
 
 <!-- HERO -->
-<main id="home" class="hero" data-aos="fade-up">
-  <div class="card-glass">
-    <h1>Hello — I'm <strong>S. M. Al Nayem Sultan</strong></h1>
-    <p class="lead">8th Semester Computer Science & Engineering undergrad at Daffodil International University | Network Engineer Intern at Goiinovior Limited | Active member of DIU VSC | Former Volunteer at BD Clean Nilphamari — Passionate about tech, networking, and making an impact.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <a class="btn" href="S.%20M.%20Al%20Nayem%20Sultan%20.pdf" download>Download CV</a>
-      <a class="btn ghost" href="#contact">Contact Me</a>
+<div style="position:relative;">
+  <div id="tsparticles-hero"></div>
+  <main id="home" class="hero" data-aos="fade-up">
+    <div class="card-glass">
+      <h1>Hello — I'm <strong>S. M. Al Nayem Sultan</strong></h1>
+      <div class="typing" id="typing"></div>
+      <p class="lead">8th Semester Computer Science & Engineering undergrad at Daffodil International University | Network Engineer Intern at Goiinovior Limited | Active member of DIU VSC | Former Volunteer at BD Clean Nilphamari — Passionate about tech, networking, and making an impact.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn" href="S.%20M.%20Al%20Nayem%20Sultan%20.pdf" download>Download CV</a>
+        <a class="btn ghost" href="#contact">Contact Me</a>
+      </div>
+      <div class="meta" style="margin-top:18px">
+        <div><strong>Phone:</strong> 01847406774 / 01811531286</div>
+        <div><strong>Email:</strong> nayem.niloy69@gmail.com</div>
+        <div><strong>Hobbies:</strong> Bike riding · Travelling · Photography · Gaming</div>
+      </div>
     </div>
-    <div class="meta" style="margin-top:18px">
-      <div><strong>Phone:</strong> 01847406774 / 01811531286</div>
-      <div><strong>Email:</strong> nayem.niloy69@gmail.com</div>
-      <div><strong>Hobbies:</strong> Bike riding · Travelling · Photography · Gaming</div>
-    </div>
-  </div>
 
-  <aside class="card-glass profile-photo" data-tilt>
-  <img src="NSR.jpg" alt="S. M. Al Nayem Sultan">
-</aside>
-
-</main>
+    <aside class="card-glass profile-photo" data-tilt>
+      <img src="NSR.jpg" alt="S. M. Al Nayem Sultan">
+    </aside>
+  </main>
+</div>
 
 <!-- SKILLS -->
 <section id="skills" data-aos="fade-up">
@@ -155,39 +177,26 @@ footer{text-align:center;padding:30px 0;color:var(--muted)}
 </section>
 
 <!-- CONTACT & CV -->
-<!-- CONTACT & CV -->
 <section id="contact" data-aos="fade-up">
   <h2>Contact & CV</h2>
-  
   <div class="cv-wrap">
-    <!-- CV Actions -->
     <div class="cv-actions card-glass">
       <strong>Download / Preview</strong>
-      <div class="muted" style="font-size:13px;margin-top:6px">
-        My official CV is embedded here.
-      </div>
-
-      <!-- Buttons -->
+      <div class="muted" style="font-size:13px;margin-top:6px">My official CV is embedded here.</div>
       <a class="btn" href="S.%20M.%20Al%20Nayem%20Sultan%20.pdf" download>Download CV</a>
       <button class="btn ghost" id="openInNew">Open CV in new tab</button>
     </div>
-
-    <!-- CV Preview -->
     <div class="cv-preview card" id="cvPreviewContainer">
       <iframe src="S.%20M.%20Al%20Nayem%20Sultan%20.pdf" class="cv-preview" title="CV Preview"></iframe>
     </div>
   </div>
 
-  <!-- Contact Form -->
   <form class="contact-form card" action="https://formsubmit.co/nayem.niloy69@gmail.com" method="POST">
     <input type="hidden" name="_captcha" value="false">
-    <label>Name</label>
-    <input name="name" required />
-    <label>Email</label>
-    <input type="email" name="email" required />
-    <label>Message</label>
-    <textarea name="message" rows="5" required></textarea>
-    <div style="margin-top:10px;display:flex;gap:10px">
+    <label>Name</label><input name="name" required />
+    <label>Email</label><input type="email" name="email" required />
+    <label>Message</label><textarea name="message" rows="5" required></textarea>
+    <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
       <button class="btn" type="submit">Send</button>
       <button type="button" class="btn ghost" id="mailtoFallback">Mailto fallback</button>
     </div>
@@ -199,11 +208,51 @@ footer{text-align:center;padding:30px 0;color:var(--muted)}
 </footer>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
 <script src="https://unpkg.com/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
 
 <script>
+// Initialize particles
+tsParticles.load("tsparticles-hero", {
+  particles: {
+    number: { value: 50 },
+    color: { value: "#2061ff" },
+    shape: { type: "circle" },
+    opacity: { value: 0.3 },
+    size: { value: { min: 1, max: 4 } },
+    move: { enable: true, speed: 0.7, direction: "none", outMode: "out" }
+  },
+  detectRetina: true
+});
+
+// Typing effect
+const typingElement = document.getElementById("typing");
+const phrases = ["Network Engineer", "Developer", "Tech Enthusiast"];
+let phraseIndex = 0, charIndex = 0, typingDelay = 100, pauseDelay = 1500;
+
+function type() {
+  if (charIndex < phrases[phraseIndex].length) {
+    typingElement.textContent += phrases[phraseIndex].charAt(charIndex);
+    charIndex++;
+    setTimeout(type, typingDelay);
+  } else {
+    setTimeout(erase, pauseDelay);
+  }
+}
+function erase() {
+  if (charIndex > 0) {
+    typingElement.textContent = phrases[phraseIndex].substring(0, charIndex - 1);
+    charIndex--;
+    setTimeout(erase, typingDelay / 2);
+  } else {
+    phraseIndex = (phraseIndex + 1) % phrases.length;
+    setTimeout(type, typingDelay);
+  }
+}
+document.addEventListener("DOMContentLoaded", () => setTimeout(type, 500));
+
 // Dark mode
 const darkToggle = document.getElementById('darkToggle');
 darkToggle.addEventListener('click', () => {
@@ -212,7 +261,7 @@ darkToggle.addEventListener('click', () => {
 });
 if(localStorage.getItem('portfolio-dark')==='true') document.body.classList.add('dark');
 
-// Toggle CV preview
+// CV preview toggle
 let previewVisible = true;
 document.getElementById('previewToggle').addEventListener('click', () => {
   const container = document.getElementById('cvPreviewContainer');
@@ -220,48 +269,22 @@ document.getElementById('previewToggle').addEventListener('click', () => {
   gsap.to(container, {duration:0.5, height: previewVisible ? 680 : 0, opacity: previewVisible ? 1 : 0, ease:'power2.inOut'});
 });
 
-// Open CV in new tab
-document.getElementById('openInNew').addEventListener('click', ()=>{
-  window.open('cv.pdf', '_blank');
-});
+// Open CV
+document.getElementById('openInNew').addEventListener('click', ()=> window.open('S.%20M.%20Al%20Nayem%20Sultan%20.pdf', '_blank'));
 
 // Mailto fallback
 document.getElementById('mailtoFallback').addEventListener('click', () => {
   const form = document.querySelector('.contact-form');
-  const name = encodeURIComponent(form.name.value || 'Anonymous');
-  const email = encodeURIComponent(form.email.value || '');
-  const message = encodeURIComponent(form.message.value || '');
+  const name = encodeURIComponent(form.name.value||'Anonymous');
+  const email = encodeURIComponent(form.email.value||'');
+  const message = encodeURIComponent(form.message.value||'');
   const body = `Message from: ${name}%0AEmail: ${email}%0A%0A${message}`;
   window.location.href = `mailto:nayem.niloy69@gmail.com?subject=Portfolio Contact from ${name}&body=${body}`;
-});
-
-// Smooth scroll
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click', e=>{
-    const href = a.getAttribute('href');
-    if(href.length>1){ e.preventDefault(); document.querySelector(href).scrollIntoView({behavior:'smooth',block:'start'}); }
-  });
 });
 
 // VanillaTilt + AOS
 VanillaTilt.init(document.querySelectorAll('[data-tilt]'),{ max:12,speed:400,scale:1.02 });
 AOS.init({duration:700,once:true});
-
-
-// Open CV in new tab (correct PDF)
-document.getElementById('openInNew').addEventListener('click', () => {
-    window.open('S.%20M.%20Al%20Nayem%20Sultan%20.pdf', '_blank');
-  });
-
-  // Mailto fallback
-  document.getElementById('mailtoFallback').addEventListener('click', () => {
-    const form = document.querySelector('.contact-form');
-    const name = encodeURIComponent(form.name.value || 'Anonymous');
-    const email = encodeURIComponent(form.email.value || '');
-    const message = encodeURIComponent(form.message.value || '');
-    const body = `Message from: ${name}%0AEmail: ${email}%0A%0A${message}`;
-    window.location.href = `mailto:nayem.niloy69@gmail.com?subject=Portfolio Contact from ${name}&body=${body}`;
-  });
 </script>
 </body>
 </html>
